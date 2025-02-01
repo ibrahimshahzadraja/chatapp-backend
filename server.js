@@ -21,6 +21,13 @@ io.on("connection", (socket) => {
   console.log("A user connected");
 
   socket.on("joinRoom", (chatname) => {
+
+    const rooms = Array.from(socket.rooms);
+    rooms.forEach(room => {
+      if (room !== socket.id) {
+        socket.leave(room);
+      }})
+      
     socket.join(chatname);
     console.log(`User joined room: ${chatname}`);
   });
