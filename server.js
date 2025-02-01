@@ -34,6 +34,10 @@ io.on("connection", (socket) => {
     console.log(`Message sent to room ${chatname}: ${message}`);
     socket.to(chatname).emit("message", username, message);
   });
+  
+  socket.on("sendImage", ({chatname, username, image}) => {
+    socket.to(chatname).emit("receiveImage", username, image);
+  })
 
   socket.on("deleteChat", (chatname) => {
     const socketsInRoom = io.sockets.adapter.rooms.get(chatname);
