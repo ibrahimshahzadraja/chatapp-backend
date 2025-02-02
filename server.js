@@ -32,9 +32,15 @@ io.on("connection", (socket) => {
     console.log(`User joined room: ${chatname}`);
   });
 
-  socket.on("leaveRoom", (chatname) => {
+  socket.on("userJoined", ({chatname, username}) => {
+    console.log(`User`, chatname, username);
+    io.to(chatname).emit("userJoin", username);
+  });
+
+  socket.on("leaveRoom", ({chatname, username}) => {
     socket.leave(chatname);
     console.log(`User left room: ${chatname}`);
+    io.to(chatname).emit("userLeft", username);
   });
 
   socket.on("sendMessage", ({ chatname, username, message }) => {
@@ -55,6 +61,14 @@ io.on("connection", (socket) => {
         socketToDisconnect.leave(chatname);
       }
     }
+  });
+
+  socket.on('user-typing', (chatname) => {
+    socket.to(chatname).emit('user-typing');
+  });
+
+  socket.on('user-stopped-typing', (chatname) => {
+    socket.to(chatname).emit('user-stopped-typing');
   });
 
   socket.on("disconnect", () => {
