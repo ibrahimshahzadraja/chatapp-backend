@@ -71,6 +71,13 @@ io.on("connection", (socket) => {
     socket.to(chatname).emit('user-stopped-typing');
   });
 
+  socket.on("profilePictureChanged", ({chatname, profilePicture}) => {
+    socket.to(chatname).emit("profilePictureChanged", profilePicture);
+  });
+  socket.on("backgroundImageChanged", ({chatname, backgroundImage}) => {
+    socket.to(chatname).emit("backgroundImageChanged", backgroundImage);
+  });
+
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
