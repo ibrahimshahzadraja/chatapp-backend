@@ -32,9 +32,9 @@ io.on("connection", (socket) => {
     console.log(`User joined room: ${chatname}`);
   });
 
-  socket.on("userJoined", ({chatname, username}) => {
+  socket.on("userJoined", ({chatname, username, text}) => {
     console.log(`User`, chatname, username);
-    io.to(chatname).emit("userJoin", username);
+    io.to(chatname).emit("userJoin", username, text);
   });
 
   socket.on("leaveRoom", ({chatname, username}) => {
