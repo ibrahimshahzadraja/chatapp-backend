@@ -85,6 +85,10 @@ io.on("connection", (socket) => {
     socket.to(chatname).emit("backgroundImageChanged", backgroundImage);
   });
 
+  socket.on('send-voice', ({username, chatname, audioBlob}) => {
+    socket.to(chatname).emit('receive-voice', username, audioBlob);
+  });
+
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
