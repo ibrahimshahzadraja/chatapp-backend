@@ -89,6 +89,10 @@ io.on("connection", (socket) => {
     socket.to(chatname).emit('receive-voice', username, audioBlob);
   });
 
+  socket.on('send-file', ({username, chatname, fileUrl}) => {
+    socket.to(chatname).emit('receive-file', username, fileUrl);
+  });
+
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
