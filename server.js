@@ -89,8 +89,12 @@ io.on("connection", (socket) => {
     socket.to(chatname).emit('receive-voice', username, audioBlob);
   });
 
-  socket.on('send-file', ({username, chatname, fileUrl}) => {
-    socket.to(chatname).emit('receive-file', username, fileUrl);
+  socket.on('send-file', ({username, chatname, fileUrl, fileName}) => {
+    socket.to(chatname).emit('receive-file', username, fileUrl, fileName);
+  });
+
+  socket.on('send-video', ({username, chatname, videoUrl, videoName}) => {
+    socket.to(chatname).emit('receive-file', username, videoUrl, videoName);
   });
 
   socket.on("disconnect", () => {
