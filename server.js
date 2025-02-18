@@ -94,7 +94,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on('send-video', ({username, chatname, videoUrl, videoName}) => {
-    socket.to(chatname).emit('receive-file', username, videoUrl, videoName);
+    socket.to(chatname).emit('receive-video', username, videoUrl, videoName);
   });
 
   socket.on("disconnect", () => {
