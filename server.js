@@ -29,23 +29,19 @@ io.on("connection", (socket) => {
       }})
       
     socket.join(chatname);
-    console.log(`User joined room: ${chatname}`);
   });
 
   socket.on("userJoined", ({chatname, username, text}) => {
-    console.log(`User`, chatname, username);
     io.to(chatname).emit("userJoin", username, text);
   });
 
   socket.on("leaveRoom", ({chatname, username}) => {
     socket.leave(chatname);
-    console.log(`User left room: ${chatname}`);
     io.to(chatname).emit("userLeft", username);
   });
 
-  socket.on("sendMessage", ({ chatname, username, message }) => {
-    console.log(`Message sent to room ${chatname}: ${message}`);
-    socket.to(chatname).emit("message", username, message);
+  socket.on("sendMessage", ({ chatname, username, message, isReply, messageId, replyText, replyUsername }) => {
+    socket.to(chatname).emit("message", username, message, isReply, messageId, replyText, replyUsername);
   });
   
   socket.on("sendImage", ({chatname, username, image}) => {
