@@ -40,12 +40,12 @@ io.on("connection", (socket) => {
     io.to(chatname).emit("userLeft", username);
   });
 
-  socket.on("sendMessage", ({ chatname, username, message, isReply, messageId, replyText, replyUsername }) => {
-    socket.to(chatname).emit("message", username, message, isReply, messageId, replyText, replyUsername);
+  socket.on("sendMessage", ({ chatname, username, message, isReply, messageId, replyText, replyImage, replyUsername }) => {
+    socket.to(chatname).emit("message", username, message, isReply, messageId, replyText, replyImage, replyUsername);
   });
   
-  socket.on("sendImage", ({chatname, username, image}) => {
-    socket.to(chatname).emit("receiveImage", username, image);
+  socket.on("sendImage", ({chatname, username, image, imageName, isReply, messageId, replyText, replyImage, replyUsername}) => {
+    socket.to(chatname).emit("receiveImage", username, image, imageName, isReply, messageId, replyText, replyImage, replyUsername);
   })
 
   socket.on("deleteChat", (chatname) => {
