@@ -40,12 +40,12 @@ io.on("connection", (socket) => {
     io.to(chatname).emit("userLeft", username);
   });
 
-  socket.on("sendMessage", ({ chatname, username, message, isReply, messageId, replyText, replyImage, replyVideo, replyUsername }) => {
-    socket.to(chatname).emit("message", username, message, isReply, messageId, replyText, replyImage, replyVideo, replyUsername);
+  socket.on("sendMessage", ({ chatname, username, message, replyObj }) => {
+    socket.to(chatname).emit("message", username, message, replyObj);
   });
   
-  socket.on("sendImage", ({chatname, username, image, imageName, isReply, messageId, replyText, replyImage, replyVideo, replyUsername}) => {
-    socket.to(chatname).emit("receiveImage", username, image, imageName, isReply, messageId, replyText, replyImage, replyVideo, replyUsername);
+  socket.on("sendImage", ({chatname, username, image, imageName, replyObj}) => {
+    socket.to(chatname).emit("receiveImage", username, image, imageName, replyObj);
   })
 
   socket.on("deleteChat", (chatname) => {
@@ -81,16 +81,16 @@ io.on("connection", (socket) => {
     socket.to(chatname).emit("backgroundImageChanged", backgroundImage);
   });
 
-  socket.on('send-voice', ({username, chatname, audioBlob}) => {
-    socket.to(chatname).emit('receive-voice', username, audioBlob);
+  socket.on('send-voice', ({username, chatname, audioBlob, replyObj}) => {
+    socket.to(chatname).emit('receive-voice', username, audioBlob, replyObj);
   });
 
-  socket.on('send-file', ({username, chatname, fileUrl, fileName}) => {
-    socket.to(chatname).emit('receive-file', username, fileUrl, fileName);
+  socket.on('send-file', ({username, chatname, fileUrl, fileName, replyObj}) => {
+    socket.to(chatname).emit('receive-file', username, fileUrl, fileName, replyObj);
   });
 
-  socket.on('send-video', ({id, isReply, replyText, replyImage, replyVideo, replyUsername, username, chatname, videoUrl, videoName}) => {
-    socket.to(chatname).emit('receive-video', id, isReply, replyText, replyImage, replyVideo, replyUsername, username, videoUrl, videoName);
+  socket.on('send-video', ({username, chatname, videoUrl, videoName, replyObj}) => {
+    socket.to(chatname).emit('receive-video', username, videoUrl, videoName, replyObj);
   });
 
   socket.on("disconnect", () => {
