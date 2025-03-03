@@ -65,6 +65,9 @@ io.on("connection", (socket) => {
   socket.on("banned", ({chatname, username, type}) => {
     io.to(chatname).emit("banned", username, type);
   })
+  socket.on("admin", ({chatname, username, type}) => {
+    io.to(chatname).emit("admin", username, type);
+  })
 
   socket.on('user-typing', (chatname) => {
     socket.to(chatname).emit('user-typing');
