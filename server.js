@@ -60,13 +60,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("kicked", ({chatname, username}) => {
-    io.to(chatname).emit("kicked", username);
+    socket.to(chatname).emit("kicked", username);
   })
   socket.on("banned", ({chatname, username, type}) => {
-    io.to(chatname).emit("banned", username, type);
+    socket.to(chatname).emit("banned", username, type);
   })
   socket.on("admin", ({chatname, username, type}) => {
-    io.to(chatname).emit("admin", username, type);
+    socket.to(chatname).emit("admin", username, type);
   })
 
   socket.on('user-typing', (chatname) => {
