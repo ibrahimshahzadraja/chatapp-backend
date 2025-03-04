@@ -31,8 +31,8 @@ io.on("connection", (socket) => {
     socket.join(chatname);
   });
 
-  socket.on("userJoined", ({chatname, username, text}) => {
-    io.to(chatname).emit("userJoin", username, text);
+  socket.on("userJoined", ({chatname, username, text, profilePicture}) => {
+    io.to(chatname).emit("userJoin", username, text, profilePicture);
   });
 
   socket.on("leaveRoom", ({chatname, username}) => {
