@@ -48,6 +48,11 @@ io.on("connection", (socket) => {
     socket.to(chatname).emit("receiveImage", username, image, imageName, replyObj);
   })
 
+  socket.on("chatChanged", ({chatname, text}) => {
+    console.log(chatname, text);
+    socket.to(chatname).emit("chatChanged", text);
+  })
+
   socket.on("deleteChat", (chatname) => {
     const socketsInRoom = io.sockets.adapter.rooms.get(chatname);
     if (socketsInRoom) {
@@ -59,11 +64,11 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("kicked", ({chatname, username}) => {
-    socket.to(chatname).emit("kicked", username);
+  socket.on("kicked", ({chatname, username, userAdmin}) => {
+    socket.to(chatname).emit("kicked", username, userAdmin);
   })
-  socket.on("banned", ({chatname, username, type}) => {
-    socket.to(chatname).emit("banned", username, type);
+  socket.on("banned", ({chatname, username, type, userAdmin}) => {
+    socket.to(chatname).emit("banned", username, type, userAdmin);
   })
   socket.on("admin", ({chatname, username, type}) => {
     socket.to(chatname).emit("admin", username, type);
@@ -77,8 +82,8 @@ io.on("connection", (socket) => {
     socket.to(chatname).emit('user-stopped-typing');
   });
 
-  socket.on("profilePictureChanged", ({chatname, profilePicture}) => {
-    socket.to(chatname).emit("profilePictureChanged", profilePicture);
+  socket.on("chatUpdated", ({chatname, profilePicture, prevChatname}) => {
+    socket.to(prevChatname).emit("chatUpdated", chatname, profilePicture);
   });
   socket.on("backgroundImageChanged", ({chatname, backgroundImage}) => {
     socket.to(chatname).emit("backgroundImageChanged", backgroundImage);
