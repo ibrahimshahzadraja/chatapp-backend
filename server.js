@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: "https://chatapp-test-ashy.vercel.app/",
+  origin: "*",
   methods: ['GET', 'POST'],
   credentials: true
 }));
@@ -53,7 +53,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://chatapp-test-ashy.vercel.app/",
+    origin: "*",
     methods: ["GET", "POST"]
   }
 });
