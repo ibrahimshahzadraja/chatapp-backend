@@ -11,8 +11,8 @@ dotenv.config();
 
 webpush.setVapidDetails(
   'mailto:you@example.com',
-  'BJN9tbqwGIV5lw6qwEsxFqeZFjOmJ3rBfPJay8RFZXgNJ0_KiIGrRMmvG3eQvV1ZTfIMnzjamFJrRqoZs_R3kco',
-  'GM8PGwwA7KQn4EF9S_uxhtFFerRdSajk_eXm3wbPO1w'
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
 );
 
 const app = express();
@@ -20,7 +20,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: "*",
+  origin: process.env.FRONTEND_URL,
   methods: ['GET', 'POST'],
   credentials: true
 }));
@@ -31,7 +31,7 @@ if(connection.connection.readyState){
   console.log('MongoDB connected successfully')
 }
 
-const sendNotification = async (title, message, icon, allUsers) => {
+const sendNotification = async (title, message, icon, image, allUsers) => {
   
   const subs = await Subscription.find({ username: { $in: allUsers } });
 
@@ -40,7 +40,7 @@ const sendNotification = async (title, message, icon, allUsers) => {
       await webpush.sendNotification({
         endpoint: sub.endpoint,
         keys: sub.keys
-      }, JSON.stringify({ title, message, icon }));
+      }, JSON.stringify({ title, message, icon, image }));
       
     } catch (err) {
       console.error('Push Notification Error:', err);
@@ -53,7 +53,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: "*",
+    origin: process.env.FRONTEND_URL,
     methods: ["GET", "POST"]
   }
 });
@@ -108,11 +108,12 @@ io.on("connection", (socket) => {
 
   socket.on("sendMessage", ({ chatname, profilePicture, allUsers, username, message, replyObj }) => {
     socket.to(chatname).emit("message", username, message, replyObj);
-    sendNotification(chatname, `${username}: ${message}`, profilePicture, allUsers);
+    sendNotification(chatname, `${username}: ${message}`, profilePicture, "", allUsers);
   });
   
   socket.on("sendImage", ({chatname, username, image, imageName, replyObj}) => {
     socket.to(chatname).emit("receiveImage", username, image, imageName, replyObj);
+    sendNotification(chatname, `*${username} sent an image*`, profilePicture, image, allUsers);
   })
 
   socket.on("chatChanged", ({chatname, text}) => {
@@ -158,14 +159,17 @@ io.on("connection", (socket) => {
 
   socket.on('send-voice', ({username, chatname, audioBlob, replyObj}) => {
     socket.to(chatname).emit('receive-voice', username, audioBlob, replyObj);
+    sendNotification(chatname, `*${username} sent a voice message*`, profilePicture, '', allUsers);
   });
 
   socket.on('send-file', ({username, chatname, fileUrl, fileName, replyObj}) => {
     socket.to(chatname).emit('receive-file', username, fileUrl, fileName, replyObj);
+    sendNotification(chatname, `*${username} sent a file*`, profilePicture, '', allUsers);
   });
-
+  
   socket.on('send-video', ({username, chatname, videoUrl, videoName, replyObj}) => {
     socket.to(chatname).emit('receive-video', username, videoUrl, videoName, replyObj);
+    sendNotification(chatname, `*${username} sent a video*`, profilePicture, '', allUsers);
   });
 
   socket.on("disconnect", () => {
