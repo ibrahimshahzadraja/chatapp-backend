@@ -44,6 +44,11 @@ const sendNotification = async (title, message, icon, image, allUsers) => {
       
     } catch (err) {
       console.error('Push Notification Error:', err);
+
+      if (err.statusCode === 410 || err.statusCode === 404) {
+        await Subscription.deleteOne({ endpoint: sub.endpoint });
+        console.log('Deleted expired subscription:', sub.endpoint);
+      }
     }
   }
 };
