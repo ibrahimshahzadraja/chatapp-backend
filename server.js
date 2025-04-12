@@ -118,7 +118,7 @@ io.on("connection", (socket) => {
   
   socket.on("sendImage", ({chatname, username, image, imageName, replyObj}) => {
     socket.to(chatname).emit("receiveImage", username, image, imageName, replyObj);
-    sendNotification(chatname, `*${username} sent an image*`, profilePicture, image, allUsers);
+    // sendNotification(chatname, `*${username} sent an image*`, profilePicture, image, allUsers);
   })
 
   socket.on("chatChanged", ({chatname, text}) => {
@@ -164,17 +164,17 @@ io.on("connection", (socket) => {
 
   socket.on('send-voice', ({username, chatname, audioBlob, replyObj}) => {
     socket.to(chatname).emit('receive-voice', username, audioBlob, replyObj);
-    sendNotification(chatname, `*${username} sent a voice message*`, profilePicture, '', allUsers);
+    // sendNotification(chatname, `*${username} sent a voice message*`, profilePicture, '', allUsers);
   });
 
   socket.on('send-file', ({username, chatname, fileUrl, fileName, replyObj}) => {
     socket.to(chatname).emit('receive-file', username, fileUrl, fileName, replyObj);
-    sendNotification(chatname, `*${username} sent a file*`, profilePicture, '', allUsers);
+    // sendNotification(chatname, `*${username} sent a file*`, profilePicture, '', allUsers);
   });
   
   socket.on('send-video', ({username, chatname, videoUrl, videoName, replyObj}) => {
     socket.to(chatname).emit('receive-video', username, videoUrl, videoName, replyObj);
-    sendNotification(chatname, `*${username} sent a video*`, profilePicture, '', allUsers);
+    // sendNotification(chatname, `*${username} sent a video*`, profilePicture, '', allUsers);
   });
 
   socket.on("disconnect", () => {
