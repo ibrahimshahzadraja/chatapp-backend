@@ -121,11 +121,6 @@ io.on("connection", (socket) => {
     // sendNotification(chatname, `*${username} sent an image*`, profilePicture, image, allUsers);
   })
 
-  socket.on("chatChanged", ({chatname, text}) => {
-    console.log(chatname, text);
-    socket.to(chatname).emit("chatChanged", text);
-  })
-
   socket.on("deleteChat", (chatname) => {
     const socketsInRoom = io.sockets.adapter.rooms.get(chatname);
     if (socketsInRoom) {
@@ -155,8 +150,8 @@ io.on("connection", (socket) => {
     socket.to(chatname).emit('user-stopped-typing');
   });
 
-  socket.on("chatUpdated", ({chatname, profilePicture, prevChatname}) => {
-    socket.to(prevChatname).emit("chatUpdated", chatname, profilePicture);
+  socket.on("chatProfileUpdate", ({oldName, newName, profilePicture, message}) => {
+    socket.to(oldName).emit("chatProfileUpdate", oldName, newName, profilePicture, message);
   });
   socket.on("backgroundImageChanged", ({chatname, backgroundImage}) => {
     socket.to(chatname).emit("backgroundImageChanged", backgroundImage);
